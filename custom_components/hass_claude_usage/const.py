@@ -24,6 +24,7 @@ CONF_EXPIRES_AT = "expires_at"
 CONF_UPDATE_INTERVAL = "update_interval"
 CONF_ACCOUNT_NAME = "account_name"
 CONF_SUBSCRIPTION_LEVEL = "subscription_level"
+CONF_EMAIL = "email"
 
 # Sensor definitions: (key, name, unit, icon, device_class)
 # key corresponds to a path in the parsed usage data dict
