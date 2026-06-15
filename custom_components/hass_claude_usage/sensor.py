@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -109,8 +109,12 @@ class ClaudeUsageSensor(CoordinatorEntity[ClaudeUsageCoordinator], SensorEntity)
         value = self.coordinator.data.get(self._key)
         if value is not None and self._is_timestamp:
             try:
-                return datetime.fromisoformat(value)
+                parsed = datetime.fromisoformat(value)
             except (ValueError, TypeError):
                 _LOGGER.warning("Invalid timestamp value for %s: %s", self._key, value)
                 return None
+            # The API's reset timestamps can jitter by a few seconds between
+            # polls, which flips the displayed minute back and forth (e.g.
+            # 14:19 <-> 14:20). Round to the nearest minute to keep it stable.
+            return (parsed + timedelta(seconds=30)).replace(second=0, microsecond=0)
         return value
